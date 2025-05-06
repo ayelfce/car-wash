@@ -578,6 +578,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 494817296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1331227380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1331227382}
+  - component: {fileID: 1331227381}
+  m_Layer: 0
+  m_Name: BrushPainter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1331227381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331227380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0148e04c39a94760aebbf5c4275eb07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetMask: {fileID: 8600000, guid: 00262ee33d56e43f38b172fcc69618c9, type: 2}
+  brushMaterial: {fileID: 2100000, guid: f70d76f51ff3b4a4bbca4cda027d9c2a, type: 2}
+  brushSize: 0.025
+--- !u!4 &1331227382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331227380}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1351239976
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,7 +654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c134fc77aee4660baed131fb4f192a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  car: {fileID: 543450652745783156}
+  car: {fileID: 1151388029270681132}
   moveSpeed: 10
   followDistance: 5
 --- !u!4 &1351239978
@@ -837,6 +884,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   sprayParticle: {fileID: 8754196680923043134}
+  brushPainter: {fileID: 1331227381}
 --- !u!23 &1587545474876963826
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1055,6 +1103,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   sprayParticle: {fileID: 5925026689855805828}
+  brushPainter: {fileID: 1331227381}
 --- !u!4 &3288398255253428998
 Transform:
   m_ObjectHideFlags: 0
@@ -11892,9 +11941,9 @@ ParticleSystem:
     enabled: 1
     curve:
       serializedVersion: 2
-      minMaxState: 1
-      scalar: 1
-      minScalar: 1
+      minMaxState: 3
+      scalar: 0.2
+      minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -11945,7 +11994,7 @@ ParticleSystem:
         m_RotationOrder: 4
     y:
       serializedVersion: 2
-      minMaxState: 1
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -11998,7 +12047,7 @@ ParticleSystem:
         m_RotationOrder: 4
     z:
       serializedVersion: 2
-      minMaxState: 1
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -15953,8 +16002,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 2.5
+      scalar: 1.2
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -16270,7 +16319,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0.5
     gravitySource: 0
-    maxNumParticles: 1000
+    maxNumParticles: 50
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -20685,7 +20734,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: 762ac25bbbcf940fca2deeac8e74f5b7, type: 3}
 --- !u!1 &8409649586664892437
@@ -25519,3 +25568,4 @@ SceneRoots:
   - {fileID: 1351239978}
   - {fileID: 7949553088838213984}
   - {fileID: 5233939291004454104}
+  - {fileID: 1331227382}
