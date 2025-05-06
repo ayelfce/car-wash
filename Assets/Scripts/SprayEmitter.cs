@@ -48,7 +48,7 @@ public class SprayEmitter : MonoBehaviour
     void Spray()
     {
         Vector3 origin = transform.position;
-        Vector3 direction = sprayParticle.transform.forward;
+        Vector3 direction = transform.forward;
 
         RaycastHit[] hits = Physics.SphereCastAll(origin, sprayRadius, direction, sprayRange, hitLayers);
 
@@ -63,6 +63,6 @@ public class SprayEmitter : MonoBehaviour
         }
 
         // (Sahne gösterimi için opsiyonel)
-        Debug.DrawRay(origin, direction * sprayRange, Color.cyan);
+        Debug.DrawRay(origin, direction * sprayRange, Color.green);
     }
 }
