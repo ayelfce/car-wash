@@ -18,7 +18,7 @@ Shader "Hidden/Brush"
 
             float4 _Coord;   // Brush UV pozisyonu
             float _Size;     // Brush yarıçapı
-            float4 _Color;   // Brush rengi (örneğin (0.5,0.5,0.5,1) köpük için)
+            float4 _Color;
 
             struct v2f
             {

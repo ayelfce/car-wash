@@ -17,8 +17,8 @@ public class SprayBrushPainter : MonoBehaviour
 
         // Foam = 0.5, Water = 1.0
         Color brushColor = type == SprayEmitter.SprayType.Foam
-    ? new Color(0.4f, 0.4f, 0.4f, 1f) // maskValue = 0.4 → foam görünür
-    : new Color(1.0f, 1.0f, 1.0f, 1f); // maskValue = 1.0 → doğrudan clean
+    ? new Color(0.4f, 0.4f, 0.4f, 1f) // maskValue = 0.4 → foam
+    : new Color(1.0f, 1.0f, 1.0f, 1f); // maskValue = 1.0 → clean
 
         brushMaterial.SetVector("_Coord", new Vector4(uv.x, uv.y, 0, 0));
         brushMaterial.SetFloat("_Size", brushSize);
@@ -38,7 +38,7 @@ public class SprayBrushPainter : MonoBehaviour
 
         RenderTexture active = RenderTexture.active;
         RenderTexture.active = rt;
-        GL.Clear(true, true, Color.black); // Başlangıçta tamamen çamurlu
+        GL.Clear(true, true, Color.black); // başlangıçta çamurlu
         RenderTexture.active = active;
     }
 }

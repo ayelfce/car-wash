@@ -3,13 +3,13 @@ using UnityEngine;
 public class SprayEmitter : MonoBehaviour
 {
     public enum SprayType { Foam, Water }
-    public SprayType sprayType;
+    [SerializeField] private SprayType sprayType;
 
-    public float sprayRange = 10f;
-    public float sprayRadius = 0.2f;
-    public LayerMask hitLayers;
+    [SerializeField] private float sprayRange = 10f;
+    [SerializeField] private float sprayRadius = 0.2f;
+    [SerializeField] private LayerMask hitLayers;
 
-    public ParticleSystem sprayParticle;
+    [SerializeField] private ParticleSystem sprayParticle;
     [SerializeField] private SprayBrushPainter brushPainter;
 
     void Start()
@@ -82,6 +82,6 @@ public class SprayEmitter : MonoBehaviour
 
     private Transform GetRayOrigin()
     {
-        return transform.Find("RayOrigin"); // ya da "Nozzle", ismine göre
+        return transform.Find("RayOrigin");
     }
 }
