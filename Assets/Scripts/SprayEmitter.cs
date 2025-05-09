@@ -57,7 +57,7 @@ public class SprayEmitter : MonoBehaviour
         }
 
         Vector3 origin = rayOrigin.position;
-        Vector3 direction = rayOrigin.forward + (-rayOrigin.up * 0.2f);
+        Vector3 direction = rayOrigin.forward + (-rayOrigin.up * 0.3f);
         direction.Normalize();
 
         RaycastHit[] hits = Physics.SphereCastAll(origin, sprayRadius, direction, sprayRange, hitLayers);

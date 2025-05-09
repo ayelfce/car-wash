@@ -37,10 +37,12 @@ Shader "Hidden/Brush"
             fixed4 frag(v2f i) : SV_Target
             {
                 float dist = distance(i.uv, _Coord.xy);
-                if (dist > 0.1)
+                float falloff = smoothstep(_Size, _Size * 0.9, dist);
+
+                if (falloff <= 0.01)
                     discard;
 
-                return _Color;
+                return _Color * falloff;
             }
             ENDCG
         }

@@ -889,7 +889,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetMask: {fileID: 8600000, guid: 00262ee33d56e43f38b172fcc69618c9, type: 2}
   brushMaterial: {fileID: 2100000, guid: f70d76f51ff3b4a4bbca4cda027d9c2a, type: 2}
-  brushSize: 0.025
+  brushSize: 0.07
 --- !u!4 &1331227382
 Transform:
   m_ObjectHideFlags: 0
@@ -937,6 +937,8 @@ MonoBehaviour:
   car: {fileID: 1151388029270681132}
   moveSpeed: 25
   followDistance: 4
+  activeSprayer: {fileID: 0}
+  mainCam: {fileID: 0}
 --- !u!4 &1351239978
 Transform:
   m_ObjectHideFlags: 0
@@ -1291,8 +1293,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprayType: 1
-  sprayRange: 5
-  sprayRadius: 0.5
+  sprayRange: 7
+  sprayRadius: 0.05
   hitLayers:
     serializedVersion: 2
     m_Bits: 1
@@ -1507,8 +1509,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprayType: 0
-  sprayRange: 5
-  sprayRadius: 0.5
+  sprayRange: 7
+  sprayRadius: 0.05
   hitLayers:
     serializedVersion: 2
     m_Bits: 1
