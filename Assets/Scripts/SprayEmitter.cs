@@ -10,7 +10,6 @@ public class SprayEmitter : MonoBehaviour
     [SerializeField] private LayerMask hitLayers;
 
     [SerializeField] private ParticleSystem sprayParticle;
-    [SerializeField] private SprayBrushPainter brushPainter;
 
     void Start()
     {
@@ -71,13 +70,40 @@ public class SprayEmitter : MonoBehaviour
 
             if (hit.collider.CompareTag("Car"))
             {
-                Vector2 uv = hit.textureCoord;
-                brushPainter?.PaintAt(uv, sprayType);
-                painted++;
+                CarPaintManager paintManager = hit.collider.GetComponent<CarPaintManager>();
+                if (paintManager != null)
+                {
+                    ApplyVertexBrush(paintManager, hit.point);
+                    painted++;
+                }
+            }
+        }
+    }
+
+    void ApplyVertexBrush(CarPaintManager paintManager, Vector3 worldHitPoint)
+    {
+        Mesh mesh = paintManager.GetMesh();
+        if (mesh == null) return;
+
+        Vector3[] vertices = mesh.vertices;
+        Color[] colors = mesh.colors;
+
+        Transform tf = paintManager.transform;
+        float targetValue = sprayType == SprayType.Foam ? 0.4f : 1.0f;
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            Vector3 worldPos = tf.TransformPoint(vertices[i]);
+            float dist = Vector3.Distance(worldHitPoint, worldPos);
+
+            if (dist < sprayRadius)
+            {
+                float current = colors[i].r;
+                colors[i].r = Mathf.Clamp(current + 0.05f, 0f, targetValue);
             }
         }
 
-        Debug.DrawRay(origin, direction * sprayRange, Color.green);
+        mesh.colors = colors;
     }
 
     private Transform GetRayOrigin()

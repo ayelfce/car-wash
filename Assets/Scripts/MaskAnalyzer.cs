@@ -3,11 +3,10 @@ using TMPro;
 
 public class MaskAnalyzer : MonoBehaviour
 {
-    [SerializeField] private RenderTexture maskRT;
-    [SerializeField] private int downscale = 4; // Daha hızlı analiz için
+    [SerializeField] private MeshFilter meshFilter;
     [SerializeField] private TMP_Text percentageText;
+    [SerializeField] private float analyzeInterval = 1f;
 
-    private float analyzeInterval = 1f;
     private float timer = 0f;
 
     private void Update()
@@ -15,41 +14,39 @@ public class MaskAnalyzer : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= analyzeInterval)
         {
-            AnalyzeCleanPercentage();
+            AnalyzeVertexCleanPercentage();
             timer = 0f;
         }
     }
 
-    public void AnalyzeCleanPercentage()
+    public void AnalyzeVertexCleanPercentage()
     {
-        int width = maskRT.width / downscale;
-        int height = maskRT.height / downscale;
+        if (meshFilter == null || meshFilter.mesh == null)
+        {
+            Debug.LogWarning("MeshFilter atanmamış.");
+            return;
+        }
 
-        Texture2D tempTex = new Texture2D(width, height, TextureFormat.RGB24, false, true);
+        Mesh mesh = meshFilter.mesh;
+        Color[] colors = mesh.colors;
 
-        RenderTexture activeRT = RenderTexture.active;
-        RenderTexture.active = maskRT;
+        if (colors == null || colors.Length == 0)
+        {
+            Debug.LogWarning("Mesh vertex color içermiyor.");
+            return;
+        }
 
-        // Küçük boyutla sadece merkez alanı oku
-        tempTex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-        tempTex.Apply();
-
-        RenderTexture.active = activeRT;
-
-        int total = width * height;
+        int total = colors.Length;
         int cleanCount = 0;
 
-        Color[] pixels = tempTex.GetPixels();
-
-        foreach (Color pixel in pixels)
+        foreach (Color c in colors)
         {
-            float r = pixel.r; // sadece R kanalı kullanılıyor
-            if (r >= 0.66f) // clean olarak kabul ettiğimiz eşik
+            if (c.r >= 0.66f) // temiz kabul edilen eşik
                 cleanCount++;
         }
 
         float percent = (float)cleanCount / total * 100f;
         percentageText.text = $"Clean Rate: %{percent:F1}";
-        Debug.Log($"Temizlik: %{percent:F1}");
+        Debug.Log($"[Vertex Color] Temizlik: %{percent:F1}");
     }
 }
