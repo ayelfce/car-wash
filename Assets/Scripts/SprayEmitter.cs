@@ -10,19 +10,25 @@ public class SprayEmitter : MonoBehaviour
     [SerializeField] private LayerMask hitLayers;
 
     [SerializeField] private ParticleSystem sprayParticle;
+    [SerializeField] private float brushSpeed = 1f;
+
+    private Transform rayOrigin;
+    private bool isSprayerActive => SprayerManager.Instance != null && SprayerManager.Instance.GetActiveSprayer() == transform.parent;
 
     void Start()
     {
+        rayOrigin = transform.Find("RayOrigin");
+
+        if (rayOrigin == null)
+            Debug.LogWarning("RayOrigin child objesi bulunamadı!");
+
         if (sprayParticle != null && sprayParticle.isPlaying)
-        {
             sprayParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        }
     }
 
     void Update()
     {
-        if (SprayerManager.Instance == null || SprayerManager.Instance.GetActiveSprayer() != transform.parent)
-            return;
+        if (!isSprayerActive) return;
 
         bool sprayActive = Input.GetMouseButton(1); // Sağ tık
 
@@ -47,17 +53,10 @@ public class SprayEmitter : MonoBehaviour
 
     void Spray()
     {
-        Transform rayOrigin = GetRayOrigin();
-
-        if (rayOrigin == null)
-        {
-            Debug.LogWarning("RayOrigin child objesi bulunamadı!");
-            return;
-        }
+        if (rayOrigin == null) return;
 
         Vector3 origin = rayOrigin.position;
-        Vector3 direction = rayOrigin.forward + (-rayOrigin.up * 0.3f);
-        direction.Normalize();
+        Vector3 direction = (rayOrigin.forward + (-rayOrigin.up * 0.3f)).normalized;
 
         RaycastHit[] hits = Physics.SphereCastAll(origin, sprayRadius, direction, sprayRange, hitLayers);
 
@@ -70,44 +69,42 @@ public class SprayEmitter : MonoBehaviour
 
             if (hit.collider.CompareTag("Car"))
             {
-                CarPaintManager paintManager = hit.collider.GetComponent<CarPaintManager>();
-                if (paintManager != null)
+                CarPaintManager carPaintManager = hit.collider.GetComponent<CarPaintManager>();
+                if (carPaintManager != null)
                 {
-                    ApplyVertexBrush(paintManager, hit.point);
+                    Mesh mesh = carPaintManager.GetMesh();
+                    Vector3[] verts = mesh.vertices;
+                    Color[] colors = mesh.colors;
+                    Transform carTransform = carPaintManager.transform;
+
+                    ApplyVertexBrush(verts, colors, carTransform, hit.point);
+                    mesh.colors = colors;
                     painted++;
                 }
             }
         }
     }
-
-    void ApplyVertexBrush(CarPaintManager paintManager, Vector3 worldHitPoint)
+    void ApplyVertexBrush(Vector3[] vertices, Color[] colors, Transform carTransform, Vector3 worldHitPoint)
     {
-        Mesh mesh = paintManager.GetMesh();
-        if (mesh == null) return;
-
-        Vector3[] vertices = mesh.vertices;
-        Color[] colors = mesh.colors;
-
-        Transform tf = paintManager.transform;
-        float targetValue = sprayType == SprayType.Foam ? 0.4f : 1.0f;
-
         for (int i = 0; i < vertices.Length; i++)
         {
-            Vector3 worldPos = tf.TransformPoint(vertices[i]);
+            Vector3 worldPos = carTransform.TransformPoint(vertices[i]);
             float dist = Vector3.Distance(worldHitPoint, worldPos);
 
             if (dist < sprayRadius)
             {
+                float softness = 1f - (dist / sprayRadius);
+                softness = Mathf.Clamp(softness, 0f, 1f);
+
+                float effect = brushSpeed * Time.deltaTime * softness;
+
                 float current = colors[i].r;
-                colors[i].r = Mathf.Clamp(current + 0.05f, 0f, targetValue);
+
+                if (sprayType == SprayType.Foam)
+                    colors[i].r = Mathf.Clamp(current + effect, 0f, 0.5f);
+                else if (sprayType == SprayType.Water && current >= 0.5f)
+                    colors[i].r = Mathf.Clamp(current + effect, 0.5f, 1.0f);
             }
         }
-
-        mesh.colors = colors;
-    }
-
-    private Transform GetRayOrigin()
-    {
-        return transform.Find("RayOrigin");
     }
 }

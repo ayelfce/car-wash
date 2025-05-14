@@ -8,18 +8,24 @@ public class MaskAnalyzer : MonoBehaviour
     [SerializeField] private float analyzeInterval = 1f;
 
     private float timer = 0f;
+    private Mesh mesh;
+
+    void Awake()
+    {
+        mesh = meshFilter.mesh;
+    }
 
     private void Update()
     {
         timer += Time.deltaTime;
         if (timer >= analyzeInterval)
         {
-            AnalyzeVertexCleanPercentage();
+            AnalyzeVertexFoamAndCleanPercentage();
             timer = 0f;
         }
     }
 
-    public void AnalyzeVertexCleanPercentage()
+    public void AnalyzeVertexFoamAndCleanPercentage()
     {
         if (meshFilter == null || meshFilter.mesh == null)
         {
@@ -27,7 +33,6 @@ public class MaskAnalyzer : MonoBehaviour
             return;
         }
 
-        Mesh mesh = meshFilter.mesh;
         Color[] colors = mesh.colors;
 
         if (colors == null || colors.Length == 0)
@@ -37,16 +42,24 @@ public class MaskAnalyzer : MonoBehaviour
         }
 
         int total = colors.Length;
+        int foamCount = 0;
         int cleanCount = 0;
 
         foreach (Color c in colors)
         {
-            if (c.r >= 0.66f) // temiz kabul edilen eşik
+            float r = c.r;
+
+            if (r >= 0.5f && r < 1.0f)
+                foamCount++;
+
+            if (r >= 1.0f)
                 cleanCount++;
         }
 
-        float percent = (float)cleanCount / total * 100f;
-        percentageText.text = $"Clean Rate: %{percent:F1}";
-        Debug.Log($"[Vertex Color] Temizlik: %{percent:F1}");
+        float foamPercent = (float)foamCount / total * 100f;
+        float cleanPercent = (float)cleanCount / total * 100f;
+
+        percentageText.text = $"Foam: %{foamPercent:F1}  Clean: %{cleanPercent:F1}";
+        Debug.Log($"[Vertex Color] Foam: %{foamPercent:F1}, Clean: %{cleanPercent:F1}");
     }
 }
